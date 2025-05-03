@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rosary"
+version = "0.1.0"
+dependencies = []
+
+[tool.black]
+line-length = 88
+target-version = ['py38', 'py39', 'py310']
+
+[tool.mypy]
+python_version = "3.8"
+ignore_missing_imports = true
+strict = true
+
+[tool.pylint]
+max-line-length = 88
+disable = ["C0114", "C0115", "C0116"]
