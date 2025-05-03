@@ -14,9 +14,9 @@ source $VENV_DIR/bin/activate
 # Ensure required tools are installed
 echo "Installing dependencies..."
 pip install --upgrade pip
-pip uninstall -y rosary divine_mercy
+pip uninstall -y rosary divine_mercy counter_gui
 pip cache purge
-pip install -r python_code/requirements.txt
+pip install -r requirements.txt
 
 # Ensure required tools are installed
 echo "Installing dependencies..."
@@ -24,16 +24,18 @@ pip install black mypy pylint
 
 # Run black
 echo "Running black..."
-black prayers/divine_mercy prayers/rosary
+black python_lib/divine_mercy python_lib/rosary python_lib/counter_gui
 
 # Run mypy
 echo "Running mypy..."
-mypy prayers/divine_mercy prayers/rosary
+mypy python_lib/divine_mercy python_lib/rosary python_lib/counter_gui
 
 # Run pylint
 echo "Running pylint..."
-pylint prayers/divine_mercy prayers/rosary
+pylint python_lib/divine_mercy python_lib/rosary python_lib/counter_gui
 
 echo "All checks completed!"
 
-pip install --editable prayers/divine_mercy prayers/rosary
+pip install --editable ./python_lib/counter_gui
+pip install --editable ./python_lib/divine_mercy
+pip install --editable ./python_lib/rosary
