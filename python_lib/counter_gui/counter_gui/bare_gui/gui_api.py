@@ -1,33 +1,31 @@
-from PyQt5.QtWidgets import (
-    QApplication,
-    QWidget,
-    QVBoxLayout,
-    QLabel,
-    QPushButton,
-    QTextEdit,
-    QHBoxLayout,
-)
-from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot, QThread, Qt
 from typing import Dict
+from multiprocessing import Pipe, connection
 
 
-class RosaryAPI(QObject):
-    # Signals for thread-safe communication
-    update_signal = pyqtSignal(dict)
-
-    def __init__(self) -> None:
+class RosaryAPI():
+    def __init__(self, pipe: connection.Connection) -> None:
         super().__init__()
-        self._data: Dict[str, str, int] = {
+        self._data: Dict = {
             "mystery": "The Annunciation",
             "prayer": "Hail Mary",
-            "hail_mary_count": 0,
+            "hail_mary_count": "",
         }
         self.current_index: int = 0
+        self.pipe = pipe
 
-    def get_data(self) -> int:
+    def get_index(self) -> int:
         return self.current_index
 
-    @pyqtSlot(dict)
-    def set_data(self, new_data: Dict[str, str, int]) -> None:
+    def set_data(self, new_data: Dict) -> None:
         self._data.update(new_data)
-        self.update_signal.emit(self._data.copy())
+        self.pipe.send(self._data.copy())  # Send updated data through the pipe
+
+    def listen_for_updates(self) -> None:
+        """Continuously listen for updates from the GUI."""
+        while True:
+            if self.pipe.poll():  # Check if there's data in the pipe
+                new_data = self.pipe.recv()  # Receive data from the pipe
+                if "index" in new_data:
+                    self.current_index = new_data["index"]
+                else:
+                    self.set_data(new_data)

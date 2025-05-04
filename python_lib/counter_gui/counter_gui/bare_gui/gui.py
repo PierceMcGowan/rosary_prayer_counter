@@ -8,16 +8,18 @@ from PyQt5.QtWidgets import (
     QTextEdit,
     QHBoxLayout,
 )
-from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot, QThread, Qt
+from PyQt5.QtCore import QThread, pyqtSignal, pyqtSlot
 from counter_gui.bare_gui.gui_api import RosaryAPI
 from typing import Dict
+from multiprocessing import Pipe, connection
 
 
 class RosaryGUI(QWidget):
-    def __init__(self, api: RosaryAPI) -> None:
+    update_ui_signal = pyqtSignal(dict)
+
+    def __init__(self, pipe: connection.Connection) -> None:
         super().__init__()
-        self.api: RosaryAPI = api
-        self.api.update_signal.connect(self.update_ui_from_api)
+        self.pipe = pipe
 
         self.setWindowTitle("Rosary Prayer")
         self.setGeometry(100, 100, 500, 300)
@@ -51,15 +53,35 @@ class RosaryGUI(QWidget):
         self.prev_button.clicked.connect(self.prev_prayer)
         self.next_button.clicked.connect(self.next_prayer)
 
+        # Connect the signal to the slot
+        self.update_ui_signal.connect(self.update_ui_from_api)
+
+        # Start a thread to listen for updates from the API
+        self.listener_thread = QThread()
+        self.listener_thread.run = self.listen_for_updates
+        self.listener_thread.start()
+
+        self.current_index: int = 0
+
     def next_prayer(self) -> None:
-        if self.api.current_index < len(self.prayers) - 1:
-            self.api.current_index += 1
+        self.current_index += 1
+        self.pipe.send({"index": self.current_index})  # Send action to API
 
     def prev_prayer(self) -> None:
-        if self.api.current_index > 0:
-            self.api.current_index -= 1
+        if self.current_index > 0:
+            self.current_index -= 1
+        self.pipe.send({"index": self.current_index})  # Send action to API
 
-    def update_ui_from_api(self, data: Dict[str, str | int]) -> None:
+    def listen_for_updates(self) -> None:
+        """Continuously listen for updates from the API."""
+        while True:
+            if self.pipe.poll():  # Check if there's data in the pipe
+                data = self.pipe.recv()  # Receive data from the pipe
+                self.update_ui_signal.emit(data)  # Emit the signal with the data
+
+    @pyqtSlot(dict)
+    def update_ui_from_api(self, data: Dict) -> None:
+        """Update the UI from the API data."""
         self.mystery_text.setText(data["mystery"])
         self.prayer_text.setText(data["prayer"])
         self.counter_label.setText(str(data["hail_mary_count"]))

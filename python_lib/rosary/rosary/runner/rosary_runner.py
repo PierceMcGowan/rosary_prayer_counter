@@ -150,7 +150,7 @@ class Rosary:
         mysteries: Optional[str] = None
         if self.decades is None:
             raise ValueError("Decades not set. Call set_decades() first.")
-        if index < len(self.decade_change[0]):
+        if index < self.decade_change[0]:
             prayer = self.rosary_start_prayers[index]
         elif self.decade_change[0] <= index < self.decade_change[1]:
             prayer = self.decades[0].decade_prayers[index - self.decade_change[0]]
