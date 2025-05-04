@@ -25,11 +25,11 @@ class Prayer(Enum):
 
 
 class JoyfulMysteries(Enum):
-    ANNUNCIATION        = "The Annunciation"
-    VISITATION          = "The Visitation"
-    NATIVITY            = "The Nativity"
-    PRESENTATION        = "The Presentation"
-    FINDING_IN_TEMPLE   = "The Finding in the Temple"
+    ANNUNCIATION = "The Annunciation"
+    VISITATION = "The Visitation"
+    NATIVITY = "The Nativity"
+    PRESENTATION = "The Presentation"
+    FINDING_IN_TEMPLE = "The Finding in the Temple"
 
 
 class SorrowfulMysteries(Enum):
@@ -63,6 +63,20 @@ class Mysteries(Enum):
     LUMINOUS = List[LuminousMysteries]
 
 
+class Decade:
+    def __init__(self, mysteries_count: int, rosary_mysteries: str) -> None:
+        self.mystery_count: int = mysteries_count
+        self.mystery: str = rosary_mysteries
+        self.decade_prayers: List[Prayer] = (
+            [Prayer.ANNOUNCE_MYSTERY, Prayer.OUR_FATHER]
+            + [Prayer.HAIL_MARY] * 10
+            + [
+                Prayer.GLORY_BE,
+                Prayer.FATIMA_PRAYER,
+            ]
+        )
+
+
 class Rosary:
     def __init__(self) -> None:
         self.mysteries: Optional[Mysteries] = None
@@ -83,11 +97,11 @@ class Rosary:
         ]
         self.decade_change: List[int] = [
             len(self.rosary_start_prayers),
-            (len(self.rosary_start_prayers) + (1 * len(Decade.decade_prayers))),
-            (len(self.rosary_start_prayers) + (2 * len(Decade.decade_prayers))),
-            (len(self.rosary_start_prayers) + (3 * len(Decade.decade_prayers))),
-            (len(self.rosary_start_prayers) + (4 * len(Decade.decade_prayers))),
-            (len(self.rosary_start_prayers) + (5 * len(Decade.decade_prayers))),
+            (len(self.rosary_start_prayers) + (1 * 14)),
+            (len(self.rosary_start_prayers) + (2 * 14)),
+            (len(self.rosary_start_prayers) + (3 * 14)),
+            (len(self.rosary_start_prayers) + (4 * 14)),
+            (len(self.rosary_start_prayers) + (5 * 14)),
         ]
 
     def set_day_of_week(self) -> None:
@@ -131,7 +145,7 @@ class Rosary:
                 for (mystery_count, mystery) in enumerate(Mysteries.LUMINOUS.value)
             ]
 
-    def get_prayer_from_index(self, index: int) -> Tuple[Optional[Prayer], Optional[str]]:
+    def get_prayer_from_index(self, index: int) -> Tuple[Optional[str], Optional[str]]:
         prayer: Optional[Prayer] = None
         mysteries: Optional[str] = None
         if self.decades is None:
@@ -153,25 +167,16 @@ class Rosary:
         elif self.decade_change[4] <= index < self.decade_change[5]:
             prayer = self.decades[4].decade_prayers[index - self.decade_change[4]]
             mysteries = self.decades[4].mystery
-        elif self.decade_change[5] <= index < (len(self.rosary_end_prayers) + self.decade_change[5]):
+        elif (
+            self.decade_change[5]
+            <= index
+            < (len(self.rosary_end_prayers) + self.decade_change[5])
+        ):
             prayer = self.rosary_end_prayers[index - self.decade_change[5]]
         else:
             raise IndexError("Index out of range for rosary prayers.")
-        return prayer, mysteries
 
-
-class Decade:
-    def __init__(self, mysteries_count: int, rosary_mysteries: str) -> None:
-        self.mystery_count: int = mysteries_count
-        self.mystery: str = rosary_mysteries
-        self.decade_prayers: List[Prayer] = (
-            [Prayer.ANNOUNCE_MYSTERY, Prayer.OUR_FATHER]
-            + [Prayer.HAIL_MARY] * 10
-            + [
-                Prayer.GLORY_BE,
-                Prayer.FATIMA_PRAYER,
-            ]
-        )
+        return prayer_enum_to_string(prayer), mysteries
 
 
 def setup_rosary() -> Rosary:
@@ -179,3 +184,7 @@ def setup_rosary() -> Rosary:
     rosary.set_day_of_week()
     rosary.set_decades()
     return rosary
+
+
+def prayer_enum_to_string(prayer: Prayer) -> str:
+    return prayer.name.replace("_", " ").title()

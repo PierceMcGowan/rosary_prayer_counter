@@ -1,13 +1,40 @@
-from rosary.rosary import setup_rosary, teardown_rosary, Rosary
+from rosary.rosary import setup_rosary, Rosary
+from counter_gui.bare_gui.gui import RosaryGUI
+from counter_gui.bare_gui.gui_api import RosaryAPI
+from counter_gui.bare_gui.gui_user import start_gui, wait_for_stop_gui
+import threading
 
-def main():
+def rosary_worker(api: RosaryAPI) -> None:
     # Initialize the rosary object
     rosary = setup_rosary()
-    rosary.set_day_of_week()
 
-    #teardown the rosary object
-    rosary = teardown_rosary()
-    rosary.set_day_of_week()
+    while True:
+
+        # Get data from gui API
+        data = api.get_data()
+
+        # Update rosary object with new data
+        prayer, mystery = rosary.get_prayer_from_index(data)
+
+        # Update the API with the new data
+        api.set_data({
+            "mystery": mystery,
+            "prayer": prayer,
+            "hail_mary_count": 0,
+        })
+
+
+def main():
+    app, api = start_gui()
+
+    # Launch rosary_worker in its own thread
+    worker_thread = threading.Thread(target=rosary_worker, args=(api,))
+    worker_thread.daemon = True  # Ensures the thread exits when the main program exits
+    worker_thread.start()
+
+    # Wait for the GUI to stop
+    wait_for_stop_gui(app)
+
 
 if __name__ == "__main__":
     main()
