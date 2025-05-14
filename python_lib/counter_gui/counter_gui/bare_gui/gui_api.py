@@ -2,7 +2,7 @@ from typing import Dict
 from multiprocessing import Pipe, connection
 
 
-class RosaryAPI():
+class RosaryAPI:
     def __init__(self, pipe: connection.Connection) -> None:
         super().__init__()
         self._data: Dict = {

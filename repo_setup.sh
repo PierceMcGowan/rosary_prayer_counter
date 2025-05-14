@@ -20,7 +20,7 @@ pip install -r requirements.txt
 
 # Ensure required tools are installed
 echo "Installing dependencies..."
-pip install black mypy pylint
+pip install -r dev_requirements.txt
 
 # Run black
 echo "Running black..."
