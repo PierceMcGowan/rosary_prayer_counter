@@ -5,13 +5,14 @@ pipeline {
             steps {
                 git branch: 'main',
                     credentialsId: 'github-pat', // Reference the credential ID
-                    url: 'https://github.com/your-username/your-repo.git'
+                    url: 'https://github.com/PierceMcGowan/rosary_prayer_counter'
             }
         }        
         stage('Setup Environment') {
             steps {
                 sh 'python3 -m venv .venv'
                 sh '. .venv/bin/activate && pip install -r requirements.txt'
+                sh '. .venv/bin/activate && pip install -r dev_requirements.txt'
             }
         }
 
@@ -23,13 +24,27 @@ pipeline {
 
         stage('Run Black') {
             steps {
-                sh '. .venv/bin/activate && black --check .'
+                sh '. .venv/bin/activate && black python_lib/divine_mercy python_lib/rosary python_lib/counter_gui scripts --check .'
             }
         }
 
         stage('Run Pylint') {
             steps {
-                sh '. .venv/bin/activate && pylint --exit-zero your_project_directory'
+                sh '. .venv/bin/activate && pylint --exit-zero python_lib/divine_mercy python_lib/rosary python_lib/counter_gui scripts'
+            }
+        }
+
+        stage('Run MyPy') {
+            steps {
+                sh '. .venv/bin/activate && mypy python_lib/divine_mercy python_lib/rosary python_lib/counter_gui scripts'
+            }
+        }
+
+        stage('Install Local Libraries') {
+            steps {
+                sh '. .venv/bin/activate && pip install --editable ./python_lib/counter_gui'
+                sh '. .venv/bin/activate && pip install --editable ./python_lib/divine_mercy'
+                sh '. .venv/bin/activate && pip install --editable ./python_lib/rosary'
             }
         }
         

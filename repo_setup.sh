@@ -24,15 +24,15 @@ pip install -r dev_requirements.txt
 
 # Run black
 echo "Running black..."
-black python_lib/divine_mercy python_lib/rosary python_lib/counter_gui
+black python_lib/divine_mercy python_lib/rosary python_lib/counter_gui scripts
 
 # Run mypy
 echo "Running mypy..."
-mypy python_lib/divine_mercy python_lib/rosary python_lib/counter_gui
+mypy python_lib/divine_mercy python_lib/rosary python_lib/counter_gui scripts
 
 # Run pylint
 echo "Running pylint..."
-pylint python_lib/divine_mercy python_lib/rosary python_lib/counter_gui
+pylint python_lib/divine_mercy python_lib/rosary python_lib/counter_gui scripts
 
 echo "All checks completed!"
 
