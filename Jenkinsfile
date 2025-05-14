@@ -1,19 +1,13 @@
 pipeline {
-    agent {
-        docker {
-            perspective {
-                label 'docker-agent-1'
-            }
-        }
-    }
-    
+    agent { label 'docker-agent-1' }
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/PierceMcGowan/rosary_prayer_counter'
+                git branch: 'main',
+                    credentialsId: 'github-pat', // Reference the credential ID
+                    url: 'https://github.com/your-username/your-repo.git'
             }
-        }
-        
+        }        
         stage('Setup Environment') {
             steps {
                 sh 'python3 -m venv .venv'
