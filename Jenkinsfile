@@ -45,12 +45,6 @@ pipeline {
             }
         }
 
-        stage('Cross-Compile for Windows') {
-            steps {
-                sh '. venv/bin/activate && wine pyinstaller --onefile your_main_script.py -n your_app_windows.exe'
-            }
-        }
-
         stage('Archive Artifacts') {
             steps {
                 archiveArtifacts artifacts: 'dist/windows/start_rosary.exe,dist/linux/start_rosary', allowEmptyArchive: true
