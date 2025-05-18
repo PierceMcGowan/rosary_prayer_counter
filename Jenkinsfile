@@ -25,18 +25,21 @@ pipeline {
 
         stage('Run Black') {
             steps {
+                sh 'black --version'
                 sh 'black python_lib/divine_mercy python_lib/rosary python_lib/counter_gui scripts --check .'
             }
         }
 
         stage('Run Pylint') {
             steps {
+                sh 'pylint --version'
                 //sh 'pylint --exit-zero python_lib/divine_mercy python_lib/rosary python_lib/counter_gui scripts'
             }
         }
 
         stage('Run MyPy') {
             steps {
+                sh 'mypy --version'
                 //sh 'mypy python_lib/divine_mercy python_lib/rosary python_lib/counter_gui scripts'
             }
         }
