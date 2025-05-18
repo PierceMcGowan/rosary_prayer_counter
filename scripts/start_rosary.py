@@ -5,6 +5,7 @@ from counter_gui.bare_gui.gui_user import start_gui, wait_for_stop_gui
 import threading
 import time
 
+
 def rosary_worker(api: RosaryAPI) -> None:
     # Initialize the rosary object
     rosary = setup_rosary()
@@ -18,11 +19,13 @@ def rosary_worker(api: RosaryAPI) -> None:
         prayer, mystery = rosary.get_prayer_from_index(data)
 
         # Update the API with the new data
-        api.set_data({
-            "mystery": mystery,
-            "prayer": prayer,
-            "hail_mary_count": 0,
-        })
+        api.set_data(
+            {
+                "mystery": mystery,
+                "prayer": prayer,
+                "hail_mary_count": 0,
+            }
+        )
         time.sleep(1)  # Simulate some processing time
 
 

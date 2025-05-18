@@ -3,10 +3,11 @@ import subprocess
 import platform
 import shutil
 
+
 def compile_executable(script_path, output_dir, target_os):
     """
     Compile a Python script into an executable for the specified OS.
-    
+
     Args:
         script_path (str): Path to the Python script (e.g., start_rosary.py).
         output_dir (str): Directory to store the compiled executables.
@@ -29,9 +30,11 @@ def compile_executable(script_path, output_dir, target_os):
         pyinstaller_cmd = [
             "pyinstaller",
             "--onefile",  # Create a single executable file
-            "--distpath", output_dir,  # Output directory
-            "--name", exe_name,  # Name of the executable
-            script_path  # Path to the script
+            "--distpath",
+            output_dir,  # Output directory
+            "--name",
+            exe_name,  # Name of the executable
+            script_path,  # Path to the script
         ]
 
         # Run PyInstaller
@@ -51,6 +54,7 @@ def compile_executable(script_path, output_dir, target_os):
         print(f"Error during compilation for {target_os}: {str(e)}")
         return False
 
+
 def clean_up():
     """
     Clean up temporary files created by PyInstaller.
@@ -65,6 +69,7 @@ def clean_up():
         print("Cleaned up temporary files.")
     except Exception as e:
         print(f"Error during cleanup: {str(e)}")
+
 
 def main():
     # Configuration
@@ -89,6 +94,7 @@ def main():
 
     # Clean up temporary files
     clean_up()
+
 
 if __name__ == "__main__":
     main()

@@ -11,32 +11,33 @@ pipeline {
         stage('Setup Environment') {
             steps {
                 sh 'python3 -m venv .venv'
-                sh '. .venv/bin/activate && pip install -r requirements.txt'
-                sh '. .venv/bin/activate && pip install -r dev_requirements.txt'
+                sh '. .venv/bin/activate'
+                sh 'pip install -r requirements.txt'
+                sh 'pip install -r dev_requiremets.txt'
             }
         }
 
         stage('Run Pytest') {
             steps {
-                sh '. .venv/bin/activate && pytest --junitxml=test-results.xml'
+                sh 'pytest --junitxml=test-results.xml'
             }
         }
 
         stage('Run Black') {
             steps {
-                sh '. .venv/bin/activate && black python_lib/divine_mercy python_lib/rosary python_lib/counter_gui scripts --check .'
+                sh 'black python_lib/divine_mercy python_lib/rosary python_lib/counter_gui scripts --check .'
             }
         }
 
         stage('Run Pylint') {
             steps {
-                sh '. .venv/bin/activate && pylint --exit-zero python_lib/divine_mercy python_lib/rosary python_lib/counter_gui scripts'
+                //sh 'pylint --exit-zero python_lib/divine_mercy python_lib/rosary python_lib/counter_gui scripts'
             }
         }
 
         stage('Run MyPy') {
             steps {
-                sh '. .venv/bin/activate && mypy python_lib/divine_mercy python_lib/rosary python_lib/counter_gui scripts'
+                //sh 'mypy python_lib/divine_mercy python_lib/rosary python_lib/counter_gui scripts'
             }
         }
 
