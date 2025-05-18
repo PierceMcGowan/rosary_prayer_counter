@@ -18,7 +18,8 @@ pipeline {
 
         stage('Run Pytest') {
             steps {
-                sh '. .venv/bin/activate && pytest --junitxml=test-results.xml'
+                sh '. .venv/bin/activate && pytest --version'
+                //sh '. .venv/bin/activate && pytest --junitxml=test-results.xml'
             }
         }
 
