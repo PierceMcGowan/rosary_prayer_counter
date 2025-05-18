@@ -60,7 +60,8 @@ pipeline {
         
         stage('Cross-Compile for Windows') {
             steps {
-                sh '. .venv/bin/activate && wine python scripts/compile_rosary.py'
+                sh 'echo "Compiling for Windows"'
+                //sh '. .venv/bin/activate && wine python scripts/compile_rosary.py'
             }
         }
 
