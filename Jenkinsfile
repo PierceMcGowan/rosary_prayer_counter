@@ -3,9 +3,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'master',
-                    credentialsId: 'github-pat', // Reference the credential ID
-                    url: 'https://github.com/PierceMcGowan/rosary_prayer_counter'
+                checkout scm
             }
         }        
         stage('Setup Environment') {
