@@ -20,7 +20,7 @@ pip install -r requirements.txt
 
 # Ensure required tools are installed
 echo "Installing dependencies..."
-pip install -r dev_requirements.txt
+pip install -r dev_requiremets.txt
 
 # Run black
 echo "Running black..."
@@ -39,3 +39,5 @@ echo "All checks completed!"
 pip install --editable ./python_lib/counter_gui
 pip install --editable ./python_lib/divine_mercy
 pip install --editable ./python_lib/rosary
+
+python3 scripts/compile_rosary.py

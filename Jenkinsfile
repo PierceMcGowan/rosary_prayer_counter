@@ -1,4 +1,7 @@
 pipeline {
+    options {
+        disableConcurrentBuilds()
+    }
     agent { label 'docker-agent-1' }
     stages {
         stage('Checkout') {
