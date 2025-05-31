@@ -22,17 +22,22 @@ class RosaryGUI(QWidget):
         self.pipe = pipe
 
         self.setWindowTitle("Rosary Prayer")
-        self.setGeometry(100, 100, 500, 300)
+        # Set the window size to fit the widgets tightly
+        self.setFixedSize(250, 220)  # Adjusted to fit all widgets closely
 
         self.layout: QVBoxLayout = QVBoxLayout()
 
         self.mystery_label: QLabel = QLabel("Mystery:")
         self.mystery_text: QTextEdit = QTextEdit()
         self.mystery_text.setReadOnly(True)
+        self.mystery_text.setFixedHeight(30)
+        self.mystery_text.setFixedWidth(200)
 
         self.prayer_label: QLabel = QLabel("Prayer:")
         self.prayer_text: QTextEdit = QTextEdit()
         self.prayer_text.setReadOnly(True)
+        self.prayer_text.setFixedHeight(30)
+        self.prayer_text.setFixedWidth(200)
 
         self.counter_label: QLabel = QLabel("Hail Mary Count: 0")
 
@@ -49,6 +54,8 @@ class RosaryGUI(QWidget):
         self.layout.addWidget(self.counter_label)
         self.layout.addLayout(self.button_layout)
         self.setLayout(self.layout)
+        self.layout.setContentsMargins(10, 10, 10, 10)
+        self.layout.setSpacing(5)
 
         self.prev_button.clicked.connect(self.prev_prayer)
         self.next_button.clicked.connect(self.next_prayer)
@@ -84,4 +91,4 @@ class RosaryGUI(QWidget):
         """Update the UI from the API data."""
         self.mystery_text.setText(data["mystery"])
         self.prayer_text.setText(data["prayer"])
-        self.counter_label.setText(str(data["hail_mary_count"]))
+        self.counter_label.setText(data["hail_mary_count"])

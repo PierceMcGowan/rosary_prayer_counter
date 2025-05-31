@@ -1,5 +1,6 @@
+//C 
 pipeline {
-    agent any
+    agent { label 'docker-agent-1' }
     environment {
         GITHUB_TOKEN = credentials('github-pat') // References the stored PAT
         REPO = 'PierceMcGowan/rosary_prayer_counter' // Replace with your GitHub repo (e.g., 'username/my-repo')
