@@ -6,7 +6,7 @@
     "configurations": [
         
         {
-            "name": "Python Debugger: Current File",
+            "name": "Python Debugger: start_rosary.py",
             "type": "debugpy",
             "request": "launch",
             "program": "scripts/start_rosary.py",

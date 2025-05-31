@@ -10,23 +10,31 @@ def rosary_worker(api: RosaryAPI) -> None:
     # Initialize the rosary object
     rosary = setup_rosary()
 
+    prayer_index = 0
+    previous_index = -1
+
     while True:
 
         # Get data from gui API
-        data = api.get_index()
+        prayer_index = api.get_index()
+
+        if prayer_index == previous_index:
+            time.sleep(0.1)
+            continue
+
+        previous_index = prayer_index
 
         # Update rosary object with new data
-        prayer, mystery = rosary.get_prayer_from_index(data)
+        prayer, mystery = rosary.get_prayer_from_index(prayer_index)
 
         # Update the API with the new data
         api.set_data(
             {
                 "mystery": mystery,
                 "prayer": prayer,
-                "hail_mary_count": 0,
+                "hail_mary_count": "",
             }
         )
-        time.sleep(1)  # Simulate some processing time
 
 
 def main():

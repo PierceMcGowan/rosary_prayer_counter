@@ -1,5 +1,6 @@
 from typing import Dict
 from multiprocessing import Pipe, connection
+import time
 
 
 class RosaryAPI:
@@ -29,3 +30,4 @@ class RosaryAPI:
                     self.current_index = new_data["index"]
                 else:
                     self.set_data(new_data)
+            time.sleep(0.1)  # Sleep to avoid busy waiting

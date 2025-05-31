@@ -57,10 +57,10 @@ class LuminousMysteries(Enum):
 
 
 class Mysteries(Enum):
-    JOYFUL = List[JoyfulMysteries]
-    SORROWFUL = List[SorrowfulMysteries]
-    GLORIOUS = List[GloriousMysteries]
-    LUMINOUS = List[LuminousMysteries]
+    JOYFUL = [m.value for m in JoyfulMysteries]
+    SORROWFUL = [m.value for m in SorrowfulMysteries]
+    GLORIOUS = [m.value for m in GloriousMysteries]
+    LUMINOUS = [m.value for m in LuminousMysteries]
 
 
 class Decade:
