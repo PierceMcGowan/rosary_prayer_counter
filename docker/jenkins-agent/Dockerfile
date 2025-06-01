@@ -35,5 +35,15 @@ ENV PATH="/root/.cargo/bin:${PATH}"
 # Verify installations
 RUN python3 --version && pip3 --version && git --version && rustc --version
 
+# Install Wine and dependencies for Windows builds
+RUN dpkg --add-architecture i386 && \
+    apt-get update && \
+    apt-get install -y wine64 wine32
+
+# Download and install Windows Python (3.11) into Wine
+RUN wget https://www.python.org/ftp/python/3.11.7/python-3.11.7-amd64.exe -O /tmp/python311-installer.exe && \
+    wine /tmp/python311-installer.exe /quiet InstallAllUsers=1 PrependPath=1 TargetDir=C:\\Python311 && \
+    rm /tmp/python311-installer.exe
+
 # Switch back to the Jenkins user
 USER jenkins
