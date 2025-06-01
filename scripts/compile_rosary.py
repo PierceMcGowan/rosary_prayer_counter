@@ -29,19 +29,17 @@ def compile_executable(script_path, output_dir, target_os):
         # PyInstaller command
         pyinstaller_cmd = [
             "pyinstaller",
-            "--onefile",  # Create a single executable file
+            "--onefile",
             "--distpath",
-            output_dir,  # Output directory
+            output_dir,
             "--name",
-            exe_name,  # Name of the executable
-            script_path,  # Path to the script
+            exe_name,
+            script_path,
         ]
 
-        # Run PyInstaller
         print(f"Compiling {script_path} for {target_os}...")
         result = subprocess.run(pyinstaller_cmd, capture_output=True, text=True)
 
-        # Check for errors
         if result.returncode != 0:
             print(f"Error compiling for {target_os}:")
             print(result.stderr)
@@ -73,26 +71,20 @@ def clean_up():
 
 def main():
     # Configuration
-    script_path = "scripts/start_rosary.py"  # Path to your Python script
-    output_dir = "dist"  # Output directory for executables
+    script_path = "scripts/start_rosary.py"
+    output_dir = "dist"
 
-    # Detect current OS
     current_os = platform.system().lower()
     print(f"Detected OS: {current_os}")
 
-    # Compile for Windows
+    # Compile for current OS only
     if current_os == "windows":
         compile_executable(script_path, os.path.join(output_dir, "windows"), "windows")
-    else:
-        print("Skipping Windows compilation (not on Windows).")
-
-    # Compile for Linux
-    if current_os == "linux":
+    elif current_os == "linux":
         compile_executable(script_path, os.path.join(output_dir, "linux"), "linux")
     else:
-        print("Skipping Linux compilation (not on Linux).")
+        print("Unsupported OS for compilation.")
 
-    # Clean up temporary files
     clean_up()
 
 

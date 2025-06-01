@@ -2,4 +2,3 @@ black
 mypy
 pylint
 pytest
-pyinstaller
